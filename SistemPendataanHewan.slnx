@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SistemPendataanHewan/SistemPendataanHewan.csproj" />
+  <Project Path="Vaksinasi/Vaksinasi.csproj" />
+</Solution>
