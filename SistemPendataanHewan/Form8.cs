@@ -77,5 +77,12 @@ namespace SistemPendataanHewan
             frm.Show();
         }
 
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Anda telah keluar dari sistem.", "Logout", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form4 login = new Form4();
+            login.Show();
+            this.Close();
+        }
     }
 }
