@@ -121,5 +121,66 @@ namespace SistemPendataanHewan
             }
         }
 
+        // COCOK: Menggunakan nama Form1_Load_1 sesuai baris terakhir di Form1.Designer.cs kamu
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            txtIDPemilik.ReadOnly = true; // Default terkunci agar input normal aman
+            LoadData();
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            ConnectDatabase();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtNamaPemilik.Text))
+                {
+                    MessageBox.Show("Nama Pemilik wajib diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNamaPemilik.Focus();
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertPemilik", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Menggunakan parameter @NamaPemilik agar serasi dengan modifikasi database
+                        cmd.Parameters.AddWithValue("@NamaPemilik", txtNamaPemilik.Text);
+                        cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
+                        cmd.Parameters.AddWithValue("@NoHP", txtNoHP.Text);
+                        cmd.Parameters.AddWithValue("@RTRW", txtRTRW.Text);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Data pemilik berhasil ditambahkan", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ClearForm();
+                        LoadData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan saat insert: " + ex.Message, "Error Insert", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }
