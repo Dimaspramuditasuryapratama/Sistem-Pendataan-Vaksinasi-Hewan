@@ -74,5 +74,20 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void BindControls()
+        {
+            txtIDPemilik.DataBindings.Clear();
+            txtNamaPemilik.DataBindings.Clear();
+            txtAlamat.DataBindings.Clear();
+            txtNoHP.DataBindings.Clear();
+            txtRTRW.DataBindings.Clear();
+
+            txtIDPemilik.DataBindings.Add("Text", pemilikBindingSource, "IDPemilik");
+            txtNamaPemilik.DataBindings.Add("Text", pemilikBindingSource, "NamaPemilik");
+            txtAlamat.DataBindings.Add("Text", pemilikBindingSource, "Alamat");
+            txtNoHP.DataBindings.Add("Text", pemilikBindingSource, "NoHP");
+            txtRTRW.DataBindings.Add("Text", pemilikBindingSource, "RTRW");
+        }
+
     }
 }
