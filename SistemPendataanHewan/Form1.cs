@@ -268,5 +268,25 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                // Jika sedang dalam mode simulasi, kembalikan kontrol agar sinkron kembali saat tabel diklik
+                if (!txtIDPemilik.ReadOnly)
+                {
+                    txtIDPemilik.ReadOnly = true;
+                    BindControls();
+                }
+
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+                txtIDPemilik.Text = row.Cells["IDPemilik"].Value.ToString();
+                txtNamaPemilik.Text = row.Cells["NamaPemilik"].Value.ToString();
+                txtAlamat.Text = row.Cells["Alamat"].Value.ToString();
+                txtNoHP.Text = row.Cells["NoHP"].Value.ToString();
+                txtRTRW.Text = row.Cells["RTRW"].Value.ToString();
+            }
+        }
+
     }
 }
