@@ -113,5 +113,15 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            ConnectDatabase();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
     }
 }
