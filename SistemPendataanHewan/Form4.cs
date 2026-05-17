@@ -109,5 +109,17 @@ namespace SistemPendataanHewan
                 Application.Exit();
             }
         }
+
+ 
+private void txtUsername_TextChanged(object sender, EventArgs e)
+        {
+            // Kosongkan password jika username berubah (opsional)
+            // txtPassword.Clear();
+        }
+
+        private void txtPassword_TextChanged(object sender, EventArgs e)
+        {
+            // Event ini bisa dibiarkan kosong
+        }
     }
 }
