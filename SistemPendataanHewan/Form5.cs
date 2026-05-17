@@ -32,5 +32,34 @@ namespace SistemPendataanHewan
                 btnDelete.Visible = false;
             }
         }
+
+        private void ConnectDatabase()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    MessageBox.Show("Koneksi berhasil!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Koneksi gagal: " + ex.Message);
+            }
+        }
+
+        private void ClearForm()
+        {
+            txtIDHewan.Clear();
+            txtIDPemilik.Clear();
+            txtNamaHewan.Clear();
+            txtJenisHewan.Clear();
+            txtRas.Clear();
+            cmbJenisKelamin.SelectedIndex = -1;
+            txtUmur.Clear();
+            txtWarna.Clear();
+            txtIDPemilik.Focus();
+        }
     }
 }
