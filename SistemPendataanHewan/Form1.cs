@@ -182,5 +182,42 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtIDPemilik.Text))
+                {
+                    MessageBox.Show("Pilih data pemilik dari tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdatePemilik", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IDPemilik", int.Parse(txtIDPemilik.Text));
+                        cmd.Parameters.AddWithValue("@NamaPemilik", txtNamaPemilik.Text);
+                        cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
+                        cmd.Parameters.AddWithValue("@NoHP", txtNoHP.Text);
+                        cmd.Parameters.AddWithValue("@RTRW", txtRTRW.Text);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Data pemilik berhasil diperbarui", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ClearForm();
+                        LoadData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan saat update: " + ex.Message, "Error Update", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }
