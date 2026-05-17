@@ -22,5 +22,80 @@ namespace SistemPendataanHewan
             // Password akan tampil sebagai *****
             txtPassword.UseSystemPasswordChar = true;
         }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Validasi Input
+                if (string.IsNullOrWhiteSpace(txtUsername.Text))
+                {
+                    MessageBox.Show("Username harus diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtUsername.Focus();
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtPassword.Text))
+                {
+                    MessageBox.Show("Password harus diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtPassword.Focus();
+                    return;
+                }
+
+                if (conn.State == ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+
+                // MENGAMBIL DATA ROLE DARI DATABASE
+                string query = @"SELECT IDPengguna, NamaPengguna, RoleUser 
+                 FROM Pengguna 
+                 WHERE Username = @Username AND PasswordHash = @PasswordHash";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
+                    cmd.Parameters.AddWithValue("@PasswordHash", txtPassword.Text);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read()) // Jika username & password cocok
+                        {
+                            // Simpan data login ke Class SesiPengguna
+                            SesiPengguna.IDPengguna = Convert.ToInt32(reader["IDPengguna"]);
+                            SesiPengguna.NamaPengguna = reader["NamaPengguna"].ToString();
+                            SesiPengguna.RoleUser = reader["RoleUser"].ToString();
+
+                            MessageBox.Show("Login berhasil!\nSelamat datang, " + SesiPengguna.NamaPengguna + " (" + SesiPengguna.RoleUser + ")",
+                                            "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Buka Menu Utama
+                            Form8 frm = new Form8();
+                            frm.Show();
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Username atau password salah!", "Gagal", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            txtPassword.Clear();
+                            txtPassword.Focus();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Tutup koneksi
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+        }
     }
 }
