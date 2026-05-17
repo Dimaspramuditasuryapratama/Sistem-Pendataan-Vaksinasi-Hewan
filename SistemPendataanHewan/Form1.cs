@@ -119,5 +119,84 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Gagal menampilkan data: " + ex.Message);
             }
         }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            ConnectDatabase();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtNamaPemilik.Text.Trim() == "")
+                {
+                    MessageBox.Show("Nama Pemilik harus diisi!");
+                    txtNamaPemilik.Focus();
+                    return;
+                }
+
+                if (txtAlamat.Text.Trim() == "")
+                {
+                    MessageBox.Show("Alamat harus diisi!");
+                    txtAlamat.Focus();
+                    return;
+                }
+
+                if (txtNoHP.Text.Trim() == "")
+                {
+                    MessageBox.Show("No. HP harus diisi!");
+                    txtNoHP.Focus();
+                    return;
+                }
+
+                if (txtRTRW.Text.Trim() == "")
+                {
+                    MessageBox.Show("RT/RW harus diisi!");
+                    txtRTRW.Focus();
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"INSERT INTO Pemilik 
+                                     (NamaPemilik, Alamat, NoHP, RTRW)
+                                     VALUES 
+                                     (@NamaPemilik, @Alamat, @NoHP, @RTRW)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@NamaPemilik", txtNamaPemilik.Text.Trim());
+                        cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text.Trim());
+                        cmd.Parameters.AddWithValue("@NoHP", txtNoHP.Text.Trim());
+                        cmd.Parameters.AddWithValue("@RTRW", txtRTRW.Text.Trim());
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Data berhasil ditambahkan.");
+                            LoadData();
+                            ClearForm();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Data gagal ditambahkan.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+            }
+        }
     }
 }
