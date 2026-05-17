@@ -123,5 +123,69 @@ namespace SistemPendataanHewan
             LoadData();
         }
 
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDHewan.Text == "")
+                {
+                    MessageBox.Show("ID Hewan harus diisi!");
+                    txtIDHewan.Focus();
+                    return;
+                }
+
+                if (txtJenisVaksin.Text == "")
+                {
+                    MessageBox.Show("Jenis Vaksin harus diisi!");
+                    txtJenisVaksin.Focus();
+                    return;
+                }
+
+                if (cmbStatusVaksin.Text == "")
+                {
+                    MessageBox.Show("Status Vaksin harus dipilih!");
+                    cmbStatusVaksin.Focus();
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"INSERT INTO Vaksinasi
+                                     (IDHewan, JenisVaksin, TanggalVaksin, TanggalBerikutnya, StatusVaksin, Keterangan)
+                                     VALUES
+                                     (@IDHewan, @JenisVaksin, @TanggalVaksin, @TanggalBerikutnya, @StatusVaksin, @Keterangan)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDHewan", txtIDHewan.Text);
+                        cmd.Parameters.AddWithValue("@JenisVaksin", txtJenisVaksin.Text);
+                        cmd.Parameters.AddWithValue("@TanggalVaksin", dtpTanggalVaksin.Value.Date);
+                        cmd.Parameters.AddWithValue("@TanggalBerikutnya", dtpTanggalBerikutnya.Value.Date);
+                        cmd.Parameters.AddWithValue("@StatusVaksin", cmbStatusVaksin.Text);
+                        cmd.Parameters.AddWithValue("@Keterangan", txtKeterangan.Text);
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Data berhasil ditambahkan.");
+                            LoadData();
+                            ClearForm();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Data gagal ditambahkan.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+            }
+        }
+
     }
 }
