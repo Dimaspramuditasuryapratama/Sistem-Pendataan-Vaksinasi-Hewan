@@ -33,5 +33,19 @@ namespace SistemPendataanHewan
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
+
+        private void AturLebarKolom()
+        {
+            if (dataGridView1.Columns.Count > 0)
+            {
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                dataGridView1.Columns["IDPemilik"].FillWeight = 15;
+                dataGridView1.Columns["NamaPemilik"].FillWeight = 25;
+                dataGridView1.Columns["Alamat"].FillWeight = 35;
+                dataGridView1.Columns["NoHP"].FillWeight = 20;
+                dataGridView1.Columns["RTRW"].FillWeight = 15;
+            }
+        }
     }
 }
