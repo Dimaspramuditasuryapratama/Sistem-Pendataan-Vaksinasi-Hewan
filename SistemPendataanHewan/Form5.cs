@@ -163,7 +163,46 @@ namespace SistemPendataanHewan
                     txtWarna.Focus();
                     return;
                 }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"INSERT INTO HewanPeliharaan
+                                     (IDPemilik, NamaHewan, JenisHewan, Ras, JenisKelamin, Umur, Warna)
+                                     VALUES
+                                     (@IDPemilik, @NamaHewan, @JenisHewan, @Ras, @JenisKelamin, @Umur, @Warna)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDPemilik", txtIDPemilik.Text);
+                        cmd.Parameters.AddWithValue("@NamaHewan", txtNamaHewan.Text);
+                        cmd.Parameters.AddWithValue("@JenisHewan", txtJenisHewan.Text);
+                        cmd.Parameters.AddWithValue("@Ras", txtRas.Text);
+                        cmd.Parameters.AddWithValue("@JenisKelamin", cmbJenisKelamin.Text);
+                        cmd.Parameters.Add("@Umur", System.Data.SqlDbType.Decimal).Value =
+                        decimal.Parse(txtUmur.Text);
+                        cmd.Parameters.AddWithValue("@Warna", txtWarna.Text);
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Data berhasil ditambahkan.");
+                            LoadData();
+                            ClearForm();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Data gagal ditambahkan.");
+                        }
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
             }
+        }
     }
 }
