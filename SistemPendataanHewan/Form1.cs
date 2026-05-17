@@ -47,5 +47,31 @@ namespace SistemPendataanHewan
                 dataGridView1.Columns["RTRW"].FillWeight = 15;
             }
         }
+
+        private void ConnectDatabase()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    MessageBox.Show("Koneksi berhasil!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Koneksi gagal: " + ex.Message);
+            }
+        }
+
+        private void ClearForm()
+        {
+            txtIDPemilik.Clear();
+            txtNamaPemilik.Clear();
+            txtAlamat.Clear();
+            txtNoHP.Clear();
+            txtRTRW.Clear();
+            txtNamaPemilik.Focus();
+        }
     }
 }
