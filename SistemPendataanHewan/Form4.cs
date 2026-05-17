@@ -97,5 +97,17 @@ namespace SistemPendataanHewan
                 }
             }
         }
+
+        private void btnBatal_Click(object sender, EventArgs e)
+        {
+            // Konfirmasi keluar aplikasi
+            DialogResult result = MessageBox.Show("Apakah Anda yakin ingin keluar?", "Konfirmasi",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
     }
 }
