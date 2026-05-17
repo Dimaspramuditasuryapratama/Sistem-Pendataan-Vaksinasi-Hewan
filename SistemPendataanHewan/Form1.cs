@@ -34,5 +34,18 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void ClearForm()
+        {
+            // Mengembalikan Binding yang sempat diputus saat Test Injection
+            BindControls();
+
+            txtIDPemilik.Clear();
+            txtNamaPemilik.Clear();
+            txtAlamat.Clear();
+            txtNoHP.Clear();
+            txtRTRW.Clear();
+            txtNamaPemilik.Focus();
+        }
+
     }
 }
