@@ -89,5 +89,37 @@ namespace SistemPendataanHewan
             txtRTRW.DataBindings.Add("Text", pemilikBindingSource, "RTRW");
         }
 
+        private void LoadData()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_GetPemilik", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            dtPemilik = new DataTable();
+                            da.Fill(dtPemilik);
+
+                            pemilikBindingSource.DataSource = dtPemilik;
+                            dataGridView1.DataSource = pemilikBindingSource;
+
+                            bindingNavigator1.BindingSource = pemilikBindingSource;
+
+                            BindControls();
+                        }
+                    }
+                }
+                HitungTotal();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal load data: " + ex.Message);
+            }
+        }
+
     }
 }
