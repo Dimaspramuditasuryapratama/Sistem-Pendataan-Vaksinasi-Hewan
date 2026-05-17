@@ -71,5 +71,11 @@ namespace SistemPendataanHewan
             frm.Show();
         }
 
+        private void btnLaporan_Click(object sender, EventArgs e)
+        {
+            Form10 frm = new Form10();
+            frm.Show();
+        }
+
     }
 }
