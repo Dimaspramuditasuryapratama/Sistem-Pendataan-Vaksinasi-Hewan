@@ -204,5 +204,61 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Terjadi kesalahan: " + ex.Message);
             }
         }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDHewan.Text == "")
+                {
+                    MessageBox.Show("Pilih data pada tabel terlebih dahulu!");
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"UPDATE HewanPeliharaan
+                                     SET IDPemilik = @IDPemilik,
+                                         NamaHewan = @NamaHewan,
+                                         JenisHewan = @JenisHewan,
+                                         Ras = @Ras,
+                                         JenisKelamin = @JenisKelamin,
+                                         Umur = @Umur,
+                                         Warna = @Warna
+                                     WHERE IDHewan = @IDHewan";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDHewan", txtIDHewan.Text);
+                        cmd.Parameters.AddWithValue("@IDPemilik", txtIDPemilik.Text);
+                        cmd.Parameters.AddWithValue("@NamaHewan", txtNamaHewan.Text);
+                        cmd.Parameters.AddWithValue("@JenisHewan", txtJenisHewan.Text);
+                        cmd.Parameters.AddWithValue("@Ras", txtRas.Text);
+                        cmd.Parameters.AddWithValue("@JenisKelamin", cmbJenisKelamin.Text);
+                        cmd.Parameters.AddWithValue("@Umur", decimal.Parse(txtUmur.Text));
+                        cmd.Parameters.AddWithValue("@Warna", txtWarna.Text);
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Data berhasil diubah.");
+                            LoadData();
+                            ClearForm();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Data tidak ditemukan.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+            }
+        }
     }
 }
