@@ -288,5 +288,52 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void btnResetData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult resultConfirm = MessageBox.Show(
+                    "Yakin ingin memulihkan seluruh data Pemilik dari tabel backup?",
+                    "Konfirmasi Reset",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (resultConfirm == DialogResult.Yes)
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+
+                        string query = @"
+                            IF OBJECT_ID('dbo.Pemilik_Backup') IS NOT NULL
+                            BEGIN
+                                UPDATE P
+                                SET P.NamaPemilik = B.NamaPemilik,
+                                    P.Alamat = B.Alamat,
+                                    P.NoHP = B.NoHP,
+                                    P.RTRW = B.RTRW
+                                FROM dbo.Pemilik P
+                                INNER JOIN dbo.Pemilik_Backup B ON P.IDPemilik = B.IDPemilik;
+                            END";
+
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    MessageBox.Show("Data Pemilik berhasil dikembalikan ke kondisi semula!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ClearForm();
+                    txtIDPemilik.ReadOnly = true;
+                    LoadData();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Reset data gagal: " + ex.Message, "Error Reset", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }
