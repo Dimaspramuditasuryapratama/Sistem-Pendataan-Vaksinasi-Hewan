@@ -291,5 +291,31 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+
+                txtIDVaksinasi.Text = row.Cells["IDVaksinasi"].Value?.ToString();
+                txtIDHewan.Text = row.Cells["IDHewan"].Value?.ToString();
+                txtJenisVaksin.Text = row.Cells["JenisVaksin"].Value?.ToString();
+
+                DateTime tanggalVaksin;
+                if (DateTime.TryParse(row.Cells["TanggalVaksin"].Value?.ToString(), out tanggalVaksin))
+                {
+                    dtpTanggalVaksin.Value = tanggalVaksin;
+                }
+
+                DateTime tanggalBerikutnya;
+                if (DateTime.TryParse(row.Cells["TanggalBerikutnya"].Value?.ToString(), out tanggalBerikutnya))
+                {
+                    dtpTanggalBerikutnya.Value = tanggalBerikutnya;
+                }
+
+                cmbStatusVaksin.Text = row.Cells["StatusVaksin"].Value?.ToString();
+                txtKeterangan.Text = row.Cells["Keterangan"].Value?.ToString();
+            }
+        }
     }
 }
