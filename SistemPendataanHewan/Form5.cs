@@ -107,5 +107,63 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Gagal menampilkan data: " + ex.Message);
             }
         }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            ConnectDatabase();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDPemilik.Text == "")
+                {
+                    MessageBox.Show("ID Pemilik harus diisi!");
+                    txtIDPemilik.Focus();
+                    return;
+                }
+
+                if (txtNamaHewan.Text == "")
+                {
+                    MessageBox.Show("Nama Hewan harus diisi!");
+                    txtNamaHewan.Focus();
+                    return;
+                }
+
+                if (txtJenisHewan.Text == "")
+                {
+                    MessageBox.Show("Jenis Hewan harus diisi!");
+                    txtJenisHewan.Focus();
+                    return;
+                }
+
+                if (cmbJenisKelamin.Text == "")
+                {
+                    MessageBox.Show("Jenis Kelamin harus dipilih!");
+                    cmbJenisKelamin.Focus();
+                    return;
+                }
+
+                if (txtUmur.Text == "")
+                {
+                    MessageBox.Show("Umur harus diisi!");
+                    txtUmur.Focus();
+                    return;
+                }
+
+                if (txtWarna.Text == "")
+                {
+                    MessageBox.Show("Warna harus diisi!");
+                    txtWarna.Focus();
+                    return;
+                }
+            }
+            }
     }
 }
