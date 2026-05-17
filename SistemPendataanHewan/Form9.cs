@@ -241,5 +241,55 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDVaksinasi.Text == "")
+                {
+                    MessageBox.Show("Pilih data pada tabel terlebih dahulu!");
+                    return;
+                }
+
+                DialogResult konfirmasi = MessageBox.Show(
+                    "Yakin ingin menghapus data ini?",
+                    "Konfirmasi",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (konfirmasi != DialogResult.Yes)
+                    return;
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "DELETE FROM Vaksinasi WHERE IDVaksinasi = @IDVaksinasi";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDVaksinasi", txtIDVaksinasi.Text);
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Data berhasil dihapus.");
+                            LoadData();
+                            ClearForm();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Data tidak ditemukan.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+            }
+        }
+
     }
 }
