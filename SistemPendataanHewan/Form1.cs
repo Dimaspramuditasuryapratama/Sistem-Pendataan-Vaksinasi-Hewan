@@ -198,5 +198,150 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Terjadi kesalahan: " + ex.Message);
             }
         }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDPemilik.Text.Trim() == "")
+                {
+                    MessageBox.Show("Pilih data pada tabel terlebih dahulu!");
+                    return;
+                }
+
+                if (txtNamaPemilik.Text.Trim() == "")
+                {
+                    MessageBox.Show("Nama Pemilik harus diisi!");
+                    txtNamaPemilik.Focus();
+                    return;
+                }
+
+                if (txtAlamat.Text.Trim() == "")
+                {
+                    MessageBox.Show("Alamat harus diisi!");
+                    txtAlamat.Focus();
+                    return;
+                }
+
+                if (txtNoHP.Text.Trim() == "")
+                {
+                    MessageBox.Show("No. HP harus diisi!");
+                    txtNoHP.Focus();
+                    return;
+                }
+
+                if (txtRTRW.Text.Trim() == "")
+                {
+                    MessageBox.Show("RT/RW harus diisi!");
+                    txtRTRW.Focus();
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"UPDATE Pemilik
+                                     SET NamaPemilik = @NamaPemilik,
+                                         Alamat = @Alamat,
+                                         NoHP = @NoHP,
+                                         RTRW = @RTRW
+                                     WHERE IDPemilik = @IDPemilik";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDPemilik", txtIDPemilik.Text.Trim());
+                        cmd.Parameters.AddWithValue("@NamaPemilik", txtNamaPemilik.Text.Trim());
+                        cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text.Trim());
+                        cmd.Parameters.AddWithValue("@NoHP", txtNoHP.Text.Trim());
+                        cmd.Parameters.AddWithValue("@RTRW", txtRTRW.Text.Trim());
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Data berhasil diubah.");
+                            LoadData();
+                            ClearForm();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Data tidak ditemukan.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDPemilik.Text.Trim() == "")
+                {
+                    MessageBox.Show("Pilih data pada tabel terlebih dahulu!");
+                    return;
+                }
+
+                DialogResult konfirmasi = MessageBox.Show(
+                    "Yakin ingin menghapus data ini?",
+                    "Konfirmasi",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (konfirmasi != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "DELETE FROM Pemilik WHERE IDPemilik = @IDPemilik";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDPemilik", txtIDPemilik.Text.Trim());
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Data berhasil dihapus.");
+                            LoadData();
+                            ClearForm();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Data tidak ditemukan.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+            }
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count)
+            {
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+
+                txtIDPemilik.Text = row.Cells["IDPemilik"].Value?.ToString();
+                txtNamaPemilik.Text = row.Cells["NamaPemilik"].Value?.ToString();
+                txtAlamat.Text = row.Cells["Alamat"].Value?.ToString();
+                txtNoHP.Text = row.Cells["NoHP"].Value?.ToString();
+                txtRTRW.Text = row.Cells["RTRW"].Value?.ToString();
+            }
+        }
     }
 }
