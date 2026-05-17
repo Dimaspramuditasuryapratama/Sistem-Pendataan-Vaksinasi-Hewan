@@ -41,5 +41,33 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void ConnectDatabase()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    MessageBox.Show("Koneksi berhasil!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Koneksi gagal: " + ex.Message);
+            }
+        }
+
+        private void ClearForm()
+        {
+            txtIDVaksinasi.Clear();
+            txtIDHewan.Clear();
+            txtJenisVaksin.Clear();
+            dtpTanggalVaksin.Value = DateTime.Now;
+            dtpTanggalBerikutnya.Value = DateTime.Now;
+            cmbStatusVaksin.SelectedIndex = -1;
+            txtKeterangan.Clear();
+            txtIDHewan.Focus();
+        }
+
     }
 }
