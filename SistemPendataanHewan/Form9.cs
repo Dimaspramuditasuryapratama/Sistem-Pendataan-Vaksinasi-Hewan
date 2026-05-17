@@ -69,5 +69,49 @@ namespace SistemPendataanHewan
             txtIDHewan.Focus();
         }
 
+        private void LoadData()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    dataGridView1.Rows.Clear();
+                    dataGridView1.Columns.Clear();
+
+                    dataGridView1.Columns.Add("IDVaksinasi", "ID Vaksinasi");
+                    dataGridView1.Columns.Add("IDHewan", "ID Hewan");
+                    dataGridView1.Columns.Add("JenisVaksin", "Jenis Vaksin");
+                    dataGridView1.Columns.Add("TanggalVaksin", "Tanggal Vaksin");
+                    dataGridView1.Columns.Add("TanggalBerikutnya", "Tanggal Berikutnya");
+                    dataGridView1.Columns.Add("StatusVaksin", "Status Vaksin");
+                    dataGridView1.Columns.Add("Keterangan", "Keterangan");
+
+                    string query = "SELECT * FROM Vaksinasi";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            dataGridView1.Rows.Add(
+                                reader["IDVaksinasi"].ToString(),
+                                reader["IDHewan"].ToString(),
+                                reader["JenisVaksin"].ToString(),
+                                Convert.ToDateTime(reader["TanggalVaksin"]).ToString("yyyy-MM-dd"),
+                                Convert.ToDateTime(reader["TanggalBerikutnya"]).ToString("yyyy-MM-dd"),
+                                reader["StatusVaksin"].ToString(),
+                                reader["Keterangan"].ToString()
+                            );
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menampilkan data: " + ex.Message);
+            }
+        }
+
     }
 }
