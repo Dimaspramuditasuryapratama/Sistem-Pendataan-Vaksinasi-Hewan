@@ -335,5 +335,56 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void btnTestInjection_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // JALAN TIKUS DEMO: Jika TextBox ID terdeteksi berisi angka normal (bukan payload)
+                // Kita putus binding data, bersihkan kotaknya, lalu minta user ketik payload.
+                if (!txtIDPemilik.Text.Contains("'") && !txtIDPemilik.Text.ToLower().Contains("or"))
+                {
+                    txtIDPemilik.DataBindings.Clear();
+
+                    txtIDPemilik.Clear();
+                    txtIDPemilik.ReadOnly = false;
+                    txtIDPemilik.Focus();
+
+                    MessageBox.Show("TextBox ID Pemilik sekarang telah DIKOSONGKAN dan DIBUKA!\n\nSilakan ketikkan payload injection Anda sekarang:\n' OR 1=1 --\n\nSetelah diketik, klik tombol Test Injection ini sekali lagi.", "Mode Demo Aktif", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Mengatasi error Identity Insert pada tabel Backup
+                    string fixBackupQuery = @"
+                        IF OBJECT_ID('dbo.Pemilik_Backup') IS NOT NULL DROP TABLE dbo.Pemilik_Backup;
+                        SELECT * INTO dbo.Pemilik_Backup FROM dbo.Pemilik;";
+
+                    using (SqlCommand cmdBackup = new SqlCommand(fixBackupQuery, conn))
+                    {
+                        cmdBackup.ExecuteNonQuery();
+                    }
+
+                    // EKSEKUSI QUERY STR CONCATENATION (RENTAN)
+                    string query =
+                        "UPDATE Pemilik SET NamaPemilik='HACKED' WHERE IDPemilik='" + txtIDPemilik.Text + "'";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        MessageBox.Show(rowsAffected + " baris data pemilik berhasil di-HACK dan terupdate!", "Kerentanan Ditemukan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+
+                txtIDPemilik.ReadOnly = true;
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Test injection gagal: " + ex.Message, "Error Injection", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
