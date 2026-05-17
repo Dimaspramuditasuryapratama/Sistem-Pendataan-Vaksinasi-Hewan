@@ -52,5 +52,12 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Penyebab gagal memuat: " + ex.Message, "Informasi Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void btnPemilik_Click(object sender, EventArgs e)
+        {
+            Form1 frm = new Form1();
+            frm.Show();
+        }
+
     }
 }
