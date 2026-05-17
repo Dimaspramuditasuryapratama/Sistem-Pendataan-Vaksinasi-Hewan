@@ -260,5 +260,55 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Terjadi kesalahan: " + ex.Message);
             }
         }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDHewan.Text == "")
+                {
+                    MessageBox.Show("Pilih data pada tabel terlebih dahulu!");
+                    return;
+                }
+
+                DialogResult konfirmasi = MessageBox.Show(
+                    "Yakin ingin menghapus data ini?",
+                    "Konfirmasi",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (konfirmasi != DialogResult.Yes)
+                    return;
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "DELETE FROM HewanPeliharaan WHERE IDHewan = @IDHewan";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDHewan", txtIDHewan.Text);
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Data berhasil dihapus.");
+                            LoadData();
+                            ClearForm();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Data tidak ditemukan.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+            }
+        }
     }
 }
