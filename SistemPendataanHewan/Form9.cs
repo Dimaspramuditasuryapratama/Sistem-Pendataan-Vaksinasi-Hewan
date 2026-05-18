@@ -194,6 +194,45 @@ namespace SistemPendataanHewan
             }
         }
 
-       
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDVaksinasi.Text == "")
+                {
+                    MessageBox.Show("Pilih data vaksinasi yang ingin diubah terlebih dahulu");
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateVaksinasi", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IDVaksinasi", int.Parse(txtIDVaksinasi.Text));
+                        cmd.Parameters.AddWithValue("@IDHewan", int.Parse(txtIDHewan.Text));
+                        cmd.Parameters.AddWithValue("@JenisVaksin", txtJenisVaksin.Text);
+                        cmd.Parameters.AddWithValue("@TanggalVaksin", dtpTanggalVaksin.Value.Date);
+                        cmd.Parameters.AddWithValue("@TanggalBerikutnya", dtpTanggalBerikutnya.Value.Date);
+                        cmd.Parameters.AddWithValue("@StatusVaksin", cmbStatusVaksin.Text);
+                        cmd.Parameters.AddWithValue("@Keterangan", txtKeterangan.Text);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Data berhasil diupdate");
+                        ClearForm();
+                        LoadData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan saat update: " + ex.Message);
+            }
+        }
+
+        
     }
 }
