@@ -155,5 +155,45 @@ namespace SistemPendataanHewan
             LoadData();
         }
 
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDHewan.Text == "" || txtJenisVaksin.Text == "")
+                {
+                    MessageBox.Show("ID Hewan dan Jenis Vaksin harus diisi!");
+                    txtIDHewan.Focus();
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertVaksinasi", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IDHewan", int.Parse(txtIDHewan.Text));
+                        cmd.Parameters.AddWithValue("@JenisVaksin", txtJenisVaksin.Text);
+                        cmd.Parameters.AddWithValue("@TanggalVaksin", dtpTanggalVaksin.Value.Date);
+                        cmd.Parameters.AddWithValue("@TanggalBerikutnya", dtpTanggalBerikutnya.Value.Date);
+                        cmd.Parameters.AddWithValue("@StatusVaksin", cmbStatusVaksin.Text);
+                        cmd.Parameters.AddWithValue("@Keterangan", txtKeterangan.Text);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Data vaksinasi berhasil ditambahkan");
+                        ClearForm();
+                        LoadData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan saat insert: " + ex.Message);
+            }
+        }
+
+       
     }
 }
