@@ -33,5 +33,66 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Koneksi gagal: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void ClearForm()
+        {
+            txtIDHewan.Clear();
+            txtIDPemilik.Clear();
+            txtNamaHewan.Clear();
+            txtJenisHewan.Clear();
+            txtRas.Clear();
+            cmbJenisKelamin.SelectedIndex = -1;
+            txtUmur.Clear();
+            txtWarna.Clear();
+            txtIDPemilik.Focus();
+        }
+
+        private void HitungTotal()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_CountHewan", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        SqlParameter outputParam = new SqlParameter("@Total", SqlDbType.Int);
+                        outputParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(outputParam);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        this.Text = "Form Data Hewan - Total Data: " + outputParam.Value.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menghitung total: " + ex.Message);
+            }
+        }
+
+        private void BindControls()
+        {
+            txtIDHewan.DataBindings.Clear();
+            txtIDPemilik.DataBindings.Clear();
+            txtNamaHewan.DataBindings.Clear();
+            txtJenisHewan.DataBindings.Clear();
+            txtRas.DataBindings.Clear();
+            cmbJenisKelamin.DataBindings.Clear();
+            txtUmur.DataBindings.Clear();
+            txtWarna.DataBindings.Clear();
+
+            txtIDHewan.DataBindings.Add("Text", hewanBindingSource, "IDHewan");
+            txtIDPemilik.DataBindings.Add("Text", hewanBindingSource, "IDPemilik");
+            txtNamaHewan.DataBindings.Add("Text", hewanBindingSource, "NamaHewan");
+            txtJenisHewan.DataBindings.Add("Text", hewanBindingSource, "JenisHewan");
+            txtRas.DataBindings.Add("Text", hewanBindingSource, "Ras");
+            cmbJenisKelamin.DataBindings.Add("Text", hewanBindingSource, "JenisKelamin");
+            txtUmur.DataBindings.Add("Text", hewanBindingSource, "Umur");
+            txtWarna.DataBindings.Add("Text", hewanBindingSource, "Warna");
+        }
     }
 }
