@@ -76,5 +76,26 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void BindControls()
+        {
+            txtIDVaksinasi.DataBindings.Clear();
+            txtIDHewan.DataBindings.Clear();
+            txtJenisVaksin.DataBindings.Clear();
+            dtpTanggalVaksin.DataBindings.Clear();
+            dtpTanggalBerikutnya.DataBindings.Clear();
+            cmbStatusVaksin.DataBindings.Clear();
+            txtKeterangan.DataBindings.Clear();
+
+            txtIDVaksinasi.DataBindings.Add("Text", vaksinasiBindingSource, "IDVaksinasi");
+            txtIDHewan.DataBindings.Add("Text", vaksinasiBindingSource, "IDHewan");
+            txtJenisVaksin.DataBindings.Add("Text", vaksinasiBindingSource, "JenisVaksin");
+
+            dtpTanggalVaksin.DataBindings.Add("Value", vaksinasiBindingSource, "TanggalVaksin", true, DataSourceUpdateMode.OnValidation, DateTime.Now);
+            dtpTanggalBerikutnya.DataBindings.Add("Value", vaksinasiBindingSource, "TanggalBerikutnya", true, DataSourceUpdateMode.OnValidation, DateTime.Now);
+
+            cmbStatusVaksin.DataBindings.Add("Text", vaksinasiBindingSource, "StatusVaksin");
+            txtKeterangan.DataBindings.Add("Text", vaksinasiBindingSource, "Keterangan");
+        }
+
     }
 }
