@@ -51,5 +51,36 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void btnPemilik_Click(object sender, EventArgs e)
+        {
+            Form1 frm = new Form1();
+            frm.Show();
+        }
+
+        private void btnHewan_Click(object sender, EventArgs e)
+        {
+            Form5 frm = new Form5();
+            frm.Show();
+        }
+
+        private void btnVaksinasi_Click(object sender, EventArgs e)
+        {
+            Form9 frm = new Form9();
+            frm.Show();
+        }
+
+        private void btnLaporan_Click(object sender, EventArgs e)
+        {
+            Form10 frm = new Form10();
+            frm.Show();
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Anda telah keluar dari sistem.", "Logout", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form4 login = new Form4();
+            login.Show();
+            this.Close();
+        }
     }
 }
