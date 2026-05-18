@@ -280,5 +280,22 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Gagal menghapus data. Kemungkinan data ini sedang digunakan di tabel Vaksinasi.\n\nDetail: " + ex.Message, "Error Hapus", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+
+                txtIDHewan.Text = row.Cells["IDHewan"].Value.ToString();
+                txtIDPemilik.Text = row.Cells["IDPemilik"].Value.ToString();
+                txtNamaHewan.Text = row.Cells["NamaHewan"].Value.ToString();
+                txtJenisHewan.Text = row.Cells["JenisHewan"].Value.ToString();
+                txtRas.Text = row.Cells["Ras"].Value.ToString();
+                cmbJenisKelamin.Text = row.Cells["JenisKelamin"].Value.ToString();
+                txtUmur.Text = row.Cells["Umur"].Value.ToString();
+                txtWarna.Text = row.Cells["Warna"].Value.ToString();
+            }
+        }
     }
 }
