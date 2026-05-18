@@ -103,5 +103,27 @@ namespace SistemPendataanHewan
                 }
             }
         }
+
+        private void btnBatal_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Apakah Anda yakin ingin keluar dari aplikasi?", "Konfirmasi Keluar",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
+
+        private void txtUsername_TextChanged(object sender, EventArgs e)
+        {
+            // Opsional: Memaksa user mengetik ulang password jika username diganti di tengah jalan
+            txtPassword.Clear();
+        }
+
+        private void txtPassword_TextChanged(object sender, EventArgs e)
+        {
+            // Dibiarkan kosong sesuai dengan desain
+        }
     }
 }
