@@ -94,5 +94,52 @@ namespace SistemPendataanHewan
             txtUmur.DataBindings.Add("Text", hewanBindingSource, "Umur");
             txtWarna.DataBindings.Add("Text", hewanBindingSource, "Warna");
         }
+
+        private void LoadData()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_GetHewan", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            dtHewan = new DataTable();
+                            da.Fill(dtHewan);
+
+                            hewanBindingSource.DataSource = dtHewan;
+                            dataGridView1.DataSource = hewanBindingSource;
+
+                            bindingNavigator1.BindingSource = hewanBindingSource;
+
+                            BindControls();
+                        }
+                    }
+                }
+                HitungTotal();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal load data: " + ex.Message);
+            }
+        }
+
+        private void Form5_Load(object sender, EventArgs e)
+        {
+            cmbJenisKelamin.Items.Clear();
+            cmbJenisKelamin.Items.Add("L");
+            cmbJenisKelamin.Items.Add("P");
+
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            LoadData();
+        }
     }
 }
