@@ -129,5 +129,31 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void Form9_Load(object sender, EventArgs e)
+        {
+            cmbStatusVaksin.Items.Clear();
+            cmbStatusVaksin.Items.Add("Sudah");
+            cmbStatusVaksin.Items.Add("Belum");
+            cmbStatusVaksin.Items.Add("Ulang");
+
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            LoadData();
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            ConnectDatabase();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
     }
 }
