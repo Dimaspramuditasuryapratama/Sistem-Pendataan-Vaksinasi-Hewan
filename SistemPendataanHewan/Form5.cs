@@ -191,5 +191,45 @@ namespace SistemPendataanHewan
                 MessageBox.Show("Terjadi kesalahan saat insert: " + ex.Message);
             }
         }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtIDHewan.Text == "")
+                {
+                    MessageBox.Show("Pilih data hewan yang ingin diubah terlebih dahulu");
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateHewan", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IDHewan", int.Parse(txtIDHewan.Text));
+                        cmd.Parameters.AddWithValue("@IDPemilik", int.Parse(txtIDPemilik.Text));
+                        cmd.Parameters.AddWithValue("@NamaHewan", txtNamaHewan.Text);
+                        cmd.Parameters.AddWithValue("@JenisHewan", txtJenisHewan.Text);
+                        cmd.Parameters.AddWithValue("@Ras", txtRas.Text);
+                        cmd.Parameters.AddWithValue("@JenisKelamin", cmbJenisKelamin.Text);
+                        cmd.Parameters.AddWithValue("@Umur", decimal.Parse(txtUmur.Text));
+                        cmd.Parameters.AddWithValue("@Warna", txtWarna.Text);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Data berhasil diupdate");
+                        ClearForm();
+                        LoadData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan saat update: " + ex.Message);
+            }
+        }
     }
 }
