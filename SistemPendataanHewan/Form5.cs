@@ -141,5 +141,55 @@ namespace SistemPendataanHewan
 
             LoadData();
         }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            ConnectDatabase();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtNamaHewan.Text == "" || txtIDPemilik.Text == "")
+                {
+                    MessageBox.Show("ID Pemilik dan Nama Hewan harus diisi!");
+                    txtIDPemilik.Focus();
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertHewan", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IDPemilik", int.Parse(txtIDPemilik.Text));
+                        cmd.Parameters.AddWithValue("@NamaHewan", txtNamaHewan.Text);
+                        cmd.Parameters.AddWithValue("@JenisHewan", txtJenisHewan.Text);
+                        cmd.Parameters.AddWithValue("@Ras", txtRas.Text);
+                        cmd.Parameters.AddWithValue("@JenisKelamin", cmbJenisKelamin.Text);
+                        cmd.Parameters.AddWithValue("@Umur", decimal.Parse(txtUmur.Text));
+                        cmd.Parameters.AddWithValue("@Warna", txtWarna.Text);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Data hewan berhasil ditambahkan");
+                        ClearForm();
+                        LoadData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan saat insert: " + ex.Message);
+            }
+        }
     }
 }
