@@ -34,7 +34,7 @@ namespace SistemPendataanHewan
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    // Pastikan kata 'Hewan' di bawah ini sama dengan nama tabel di database Anda!
+
                     string query = "SELECT COUNT(*) FROM HewanPeliharaan";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -47,8 +47,6 @@ namespace SistemPendataanHewan
             catch (Exception ex)
             {
                 lblTotalHewan.Text = "Total Hewan: Gagal Memuat";
-
-                // TAMBAHKAN BARIS INI UNTUK MELIHAT ERROR ASLINYA
                 MessageBox.Show("Penyebab gagal memuat: " + ex.Message, "Informasi Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

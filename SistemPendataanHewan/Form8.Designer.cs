@@ -44,7 +44,7 @@
             this.label1.ForeColor = System.Drawing.Color.DarkSlateGray;
             this.label1.Location = new System.Drawing.Point(140, 40);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(322, 37);
+            this.label1.Size = new System.Drawing.Size(400, 46);
             this.label1.TabIndex = 0;
             this.label1.Text = "MENU UTAMA SIPETRA";
             // 
@@ -84,18 +84,6 @@
             this.btnVaksinasi.UseVisualStyleBackColor = false;
             this.btnVaksinasi.Click += new System.EventHandler(this.btnVaksinasi_Click);
             // 
-            // btnLaporan
-            // 
-            this.btnLaporan.BackColor = System.Drawing.Color.Thistle;
-            this.btnLaporan.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLaporan.Location = new System.Drawing.Point(175, 305);
-            this.btnLaporan.Name = "btnLaporan";
-            this.btnLaporan.Size = new System.Drawing.Size(250, 50);
-            this.btnLaporan.TabIndex = 5;
-            this.btnLaporan.Text = "Laporan";
-            this.btnLaporan.UseVisualStyleBackColor = false;
-            this.btnLaporan.Click += new System.EventHandler(this.btnLaporan_Click);
-            // 
             // btnLogout
             // 
             this.btnLogout.BackColor = System.Drawing.Color.LightCoral;
@@ -108,6 +96,18 @@
             this.btnLogout.UseVisualStyleBackColor = false;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
+            // btnLaporan
+            // 
+            this.btnLaporan.BackColor = System.Drawing.Color.Thistle;
+            this.btnLaporan.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLaporan.Location = new System.Drawing.Point(175, 305);
+            this.btnLaporan.Name = "btnLaporan";
+            this.btnLaporan.Size = new System.Drawing.Size(250, 50);
+            this.btnLaporan.TabIndex = 5;
+            this.btnLaporan.Text = "Laporan";
+            this.btnLaporan.UseVisualStyleBackColor = false;
+            this.btnLaporan.Click += new System.EventHandler(this.btnLaporan_Click);
+            // 
             // lblTotalHewan
             // 
             this.lblTotalHewan.AutoSize = true;
@@ -115,13 +115,13 @@
             this.lblTotalHewan.ForeColor = System.Drawing.Color.DarkSlateGray;
             this.lblTotalHewan.Location = new System.Drawing.Point(175, 450);
             this.lblTotalHewan.Name = "lblTotalHewan";
-            this.lblTotalHewan.Size = new System.Drawing.Size(194, 20);
+            this.lblTotalHewan.Size = new System.Drawing.Size(218, 25);
             this.lblTotalHewan.TabIndex = 6;
             this.lblTotalHewan.Text = "Total Hewan Terdaftar: -";
             // 
             // Form8
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.AliceBlue;
             this.ClientSize = new System.Drawing.Size(600, 510);

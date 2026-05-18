@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -9,36 +10,12 @@ namespace SistemPendataanHewan
         private readonly string connectionString =
             "Data Source=LAPTOP-2QET043V\\DIMAS;Initial Catalog=DBHewanPeliharaanADO;Integrated Security=True";
 
+        private DataTable dtVaksinasi = new DataTable();
+        private BindingSource vaksinasiBindingSource = new BindingSource();
+
         public Form9()
         {
             InitializeComponent();
-        }
-
-        private void Form9_Load(object sender, EventArgs e)
-        {
-            cmbStatusVaksin.Items.Clear();
-            cmbStatusVaksin.Items.Add("Sudah");
-            cmbStatusVaksin.Items.Add("Belum");
-            cmbStatusVaksin.Items.Add("Ulang");
-
-            txtIDVaksinasi.ReadOnly = true;
-
-            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.MultiSelect = false;
-            dataGridView1.ReadOnly = true;
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            // -------- PERBAIKAN DI SINI --------
-            // Hapus atau comment baris di bawah ini agar data tidak otomatis muncul
-            // LoadData(); 
-            // -----------------------------------
-
-            // Kunci tombol Hapus untuk Petugas
-            if (SesiPengguna.RoleUser == "Petugas")
-            {
-                btnDelete.Visible = false;
-            }
         }
 
         private void ConnectDatabase()
@@ -48,12 +25,12 @@ namespace SistemPendataanHewan
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    MessageBox.Show("Koneksi berhasil!");
+                    MessageBox.Show("Koneksi ke DBHewanPeliharaanADO berhasil!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Koneksi gagal: " + ex.Message);
+                MessageBox.Show("Koneksi gagal: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -62,11 +39,62 @@ namespace SistemPendataanHewan
             txtIDVaksinasi.Clear();
             txtIDHewan.Clear();
             txtJenisVaksin.Clear();
+
             dtpTanggalVaksin.Value = DateTime.Now;
-            dtpTanggalBerikutnya.Value = DateTime.Now;
+            dtpTanggalBerikutnya.Value = DateTime.Now.AddMonths(1);
+
             cmbStatusVaksin.SelectedIndex = -1;
             txtKeterangan.Clear();
+
             txtIDHewan.Focus();
+        }
+
+        private void HitungTotal()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_CountVaksinasi", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        SqlParameter outputParam = new SqlParameter("@Total", SqlDbType.Int);
+                        outputParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(outputParam);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        this.Text = "Form Data Vaksinasi - Total Data: " + outputParam.Value.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menghitung total: " + ex.Message);
+            }
+        }
+
+        private void BindControls()
+        {
+            txtIDVaksinasi.DataBindings.Clear();
+            txtIDHewan.DataBindings.Clear();
+            txtJenisVaksin.DataBindings.Clear();
+            dtpTanggalVaksin.DataBindings.Clear();
+            dtpTanggalBerikutnya.DataBindings.Clear();
+            cmbStatusVaksin.DataBindings.Clear();
+            txtKeterangan.DataBindings.Clear();
+
+            txtIDVaksinasi.DataBindings.Add("Text", vaksinasiBindingSource, "IDVaksinasi");
+            txtIDHewan.DataBindings.Add("Text", vaksinasiBindingSource, "IDHewan");
+            txtJenisVaksin.DataBindings.Add("Text", vaksinasiBindingSource, "JenisVaksin");
+
+            dtpTanggalVaksin.DataBindings.Add("Value", vaksinasiBindingSource, "TanggalVaksin", true, DataSourceUpdateMode.OnValidation, DateTime.Now);
+            dtpTanggalBerikutnya.DataBindings.Add("Value", vaksinasiBindingSource, "TanggalBerikutnya", true, DataSourceUpdateMode.OnValidation, DateTime.Now);
+
+            cmbStatusVaksin.DataBindings.Add("Text", vaksinasiBindingSource, "StatusVaksin");
+            txtKeterangan.DataBindings.Add("Text", vaksinasiBindingSource, "Keterangan");
         }
 
         private void LoadData()
@@ -75,42 +103,46 @@ namespace SistemPendataanHewan
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
-
-                    dataGridView1.Rows.Clear();
-                    dataGridView1.Columns.Clear();
-
-                    dataGridView1.Columns.Add("IDVaksinasi", "ID Vaksinasi");
-                    dataGridView1.Columns.Add("IDHewan", "ID Hewan");
-                    dataGridView1.Columns.Add("JenisVaksin", "Jenis Vaksin");
-                    dataGridView1.Columns.Add("TanggalVaksin", "Tanggal Vaksin");
-                    dataGridView1.Columns.Add("TanggalBerikutnya", "Tanggal Berikutnya");
-                    dataGridView1.Columns.Add("StatusVaksin", "Status Vaksin");
-                    dataGridView1.Columns.Add("Keterangan", "Keterangan");
-
-                    string query = "SELECT * FROM Vaksinasi";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("sp_GetVaksinasi", conn))
                     {
-                        while (reader.Read())
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                         {
-                            dataGridView1.Rows.Add(
-                                reader["IDVaksinasi"].ToString(),
-                                reader["IDHewan"].ToString(),
-                                reader["JenisVaksin"].ToString(),
-                                Convert.ToDateTime(reader["TanggalVaksin"]).ToString("yyyy-MM-dd"),
-                                Convert.ToDateTime(reader["TanggalBerikutnya"]).ToString("yyyy-MM-dd"),
-                                reader["StatusVaksin"].ToString(),
-                                reader["Keterangan"].ToString()
-                            );
+                            dtVaksinasi = new DataTable();
+                            da.Fill(dtVaksinasi);
+
+                            vaksinasiBindingSource.DataSource = dtVaksinasi;
+                            dataGridView1.DataSource = vaksinasiBindingSource;
+
+                            bindingNavigator1.BindingSource = vaksinasiBindingSource;
+
+                            BindControls();
                         }
                     }
                 }
+                HitungTotal();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal menampilkan data: " + ex.Message);
+                MessageBox.Show("Gagal load data: " + ex.Message);
             }
+        }
+
+        private void Form9_Load(object sender, EventArgs e)
+        {
+            cmbStatusVaksin.Items.Clear();
+            cmbStatusVaksin.Items.Add("Sudah");
+            cmbStatusVaksin.Items.Add("Belum");
+            cmbStatusVaksin.Items.Add("Ulang");
+
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            LoadData();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -127,63 +159,38 @@ namespace SistemPendataanHewan
         {
             try
             {
-                if (txtIDHewan.Text == "")
+                if (txtIDHewan.Text == "" || txtJenisVaksin.Text == "")
                 {
-                    MessageBox.Show("ID Hewan harus diisi!");
+                    MessageBox.Show("ID Hewan dan Jenis Vaksin harus diisi!");
                     txtIDHewan.Focus();
-                    return;
-                }
-
-                if (txtJenisVaksin.Text == "")
-                {
-                    MessageBox.Show("Jenis Vaksin harus diisi!");
-                    txtJenisVaksin.Focus();
-                    return;
-                }
-
-                if (cmbStatusVaksin.Text == "")
-                {
-                    MessageBox.Show("Status Vaksin harus dipilih!");
-                    cmbStatusVaksin.Focus();
                     return;
                 }
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
-
-                    string query = @"INSERT INTO Vaksinasi
-                                     (IDHewan, JenisVaksin, TanggalVaksin, TanggalBerikutnya, StatusVaksin, Keterangan)
-                                     VALUES
-                                     (@IDHewan, @JenisVaksin, @TanggalVaksin, @TanggalBerikutnya, @StatusVaksin, @Keterangan)";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertVaksinasi", conn))
                     {
-                        cmd.Parameters.AddWithValue("@IDHewan", txtIDHewan.Text);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IDHewan", int.Parse(txtIDHewan.Text));
                         cmd.Parameters.AddWithValue("@JenisVaksin", txtJenisVaksin.Text);
                         cmd.Parameters.AddWithValue("@TanggalVaksin", dtpTanggalVaksin.Value.Date);
                         cmd.Parameters.AddWithValue("@TanggalBerikutnya", dtpTanggalBerikutnya.Value.Date);
                         cmd.Parameters.AddWithValue("@StatusVaksin", cmbStatusVaksin.Text);
                         cmd.Parameters.AddWithValue("@Keterangan", txtKeterangan.Text);
 
-                        int result = cmd.ExecuteNonQuery();
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
 
-                        if (result > 0)
-                        {
-                            MessageBox.Show("Data berhasil ditambahkan.");
-                            LoadData();
-                            ClearForm();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Data gagal ditambahkan.");
-                        }
+                        MessageBox.Show("Data vaksinasi berhasil ditambahkan");
+                        ClearForm();
+                        LoadData();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+                MessageBox.Show("Terjadi kesalahan saat insert: " + ex.Message);
             }
         }
 
@@ -193,51 +200,36 @@ namespace SistemPendataanHewan
             {
                 if (txtIDVaksinasi.Text == "")
                 {
-                    MessageBox.Show("Pilih data pada tabel terlebih dahulu!");
+                    MessageBox.Show("Pilih data vaksinasi yang ingin diubah terlebih dahulu");
                     return;
                 }
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
-
-                    string query = @"UPDATE Vaksinasi
-                                     SET IDHewan = @IDHewan,
-                                         JenisVaksin = @JenisVaksin,
-                                         TanggalVaksin = @TanggalVaksin,
-                                         TanggalBerikutnya = @TanggalBerikutnya,
-                                         StatusVaksin = @StatusVaksin,
-                                         Keterangan = @Keterangan
-                                     WHERE IDVaksinasi = @IDVaksinasi";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateVaksinasi", conn))
                     {
-                        cmd.Parameters.AddWithValue("@IDVaksinasi", txtIDVaksinasi.Text);
-                        cmd.Parameters.AddWithValue("@IDHewan", txtIDHewan.Text);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IDVaksinasi", int.Parse(txtIDVaksinasi.Text));
+                        cmd.Parameters.AddWithValue("@IDHewan", int.Parse(txtIDHewan.Text));
                         cmd.Parameters.AddWithValue("@JenisVaksin", txtJenisVaksin.Text);
                         cmd.Parameters.AddWithValue("@TanggalVaksin", dtpTanggalVaksin.Value.Date);
                         cmd.Parameters.AddWithValue("@TanggalBerikutnya", dtpTanggalBerikutnya.Value.Date);
                         cmd.Parameters.AddWithValue("@StatusVaksin", cmbStatusVaksin.Text);
                         cmd.Parameters.AddWithValue("@Keterangan", txtKeterangan.Text);
 
-                        int result = cmd.ExecuteNonQuery();
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
 
-                        if (result > 0)
-                        {
-                            MessageBox.Show("Data berhasil diubah.");
-                            LoadData();
-                            ClearForm();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Data tidak ditemukan.");
-                        }
+                        MessageBox.Show("Data berhasil diupdate");
+                        ClearForm();
+                        LoadData();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+                MessageBox.Show("Terjadi kesalahan saat update: " + ex.Message);
             }
         }
 
@@ -247,47 +239,46 @@ namespace SistemPendataanHewan
             {
                 if (txtIDVaksinasi.Text == "")
                 {
-                    MessageBox.Show("Pilih data pada tabel terlebih dahulu!");
+                    MessageBox.Show("Pilih data yang ingin dihapus terlebih dahulu");
                     return;
                 }
 
-                DialogResult konfirmasi = MessageBox.Show(
-                    "Yakin ingin menghapus data ini?",
-                    "Konfirmasi",
+                DialogResult resultConfirm = MessageBox.Show(
+                    "Yakin ingin menghapus riwayat vaksinasi ini?",
+                    "Konfirmasi Hapus",
                     MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
+                    MessageBoxIcon.Question
+                );
 
-                if (konfirmasi != DialogResult.Yes)
-                    return;
-
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                if (resultConfirm == DialogResult.Yes)
                 {
-                    conn.Open();
-
-                    string query = "DELETE FROM Vaksinasi WHERE IDVaksinasi = @IDVaksinasi";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        cmd.Parameters.AddWithValue("@IDVaksinasi", txtIDVaksinasi.Text);
-
-                        int result = cmd.ExecuteNonQuery();
-
-                        if (result > 0)
+                        using (SqlCommand cmd = new SqlCommand("sp_DeleteVaksinasi", conn))
                         {
-                            MessageBox.Show("Data berhasil dihapus.");
-                            LoadData();
-                            ClearForm();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Data tidak ditemukan.");
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@IDVaksinasi", int.Parse(txtIDVaksinasi.Text));
+
+                            conn.Open();
+                            int rowsAffected = cmd.ExecuteNonQuery();
+
+                            if (rowsAffected > 0)
+                            {
+                                MessageBox.Show("Data berhasil dihapus");
+                                ClearForm();
+                                LoadData();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Data tidak ditemukan");
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+                MessageBox.Show("Gagal menghapus data. Detail: " + ex.Message, "Error Hapus", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -297,24 +288,18 @@ namespace SistemPendataanHewan
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
 
-                txtIDVaksinasi.Text = row.Cells["IDVaksinasi"].Value?.ToString();
-                txtIDHewan.Text = row.Cells["IDHewan"].Value?.ToString();
-                txtJenisVaksin.Text = row.Cells["JenisVaksin"].Value?.ToString();
+                txtIDVaksinasi.Text = row.Cells["IDVaksinasi"].Value.ToString();
+                txtIDHewan.Text = row.Cells["IDHewan"].Value.ToString();
+                txtJenisVaksin.Text = row.Cells["JenisVaksin"].Value.ToString();
 
-                DateTime tanggalVaksin;
-                if (DateTime.TryParse(row.Cells["TanggalVaksin"].Value?.ToString(), out tanggalVaksin))
-                {
-                    dtpTanggalVaksin.Value = tanggalVaksin;
-                }
+                if (row.Cells["TanggalVaksin"].Value != DBNull.Value)
+                    dtpTanggalVaksin.Value = Convert.ToDateTime(row.Cells["TanggalVaksin"].Value);
 
-                DateTime tanggalBerikutnya;
-                if (DateTime.TryParse(row.Cells["TanggalBerikutnya"].Value?.ToString(), out tanggalBerikutnya))
-                {
-                    dtpTanggalBerikutnya.Value = tanggalBerikutnya;
-                }
+                if (row.Cells["TanggalBerikutnya"].Value != DBNull.Value)
+                    dtpTanggalBerikutnya.Value = Convert.ToDateTime(row.Cells["TanggalBerikutnya"].Value);
 
-                cmbStatusVaksin.Text = row.Cells["StatusVaksin"].Value?.ToString();
-                txtKeterangan.Text = row.Cells["Keterangan"].Value?.ToString();
+                cmbStatusVaksin.Text = row.Cells["StatusVaksin"].Value.ToString();
+                txtKeterangan.Text = row.Cells["Keterangan"].Value.ToString();
             }
         }
     }

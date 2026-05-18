@@ -8,6 +8,7 @@ namespace SistemPendataanHewan
     public partial class Form4 : Form
     {
         private readonly SqlConnection conn;
+        // Pastikan Data Source sudah sesuai dengan nama Server SQL kamu
         private readonly string connectionString =
             "Data Source=LAPTOP-2QET043V\\DIMAS;Initial Catalog=DBHewanPeliharaanADO;Integrated Security=True";
 
@@ -19,7 +20,7 @@ namespace SistemPendataanHewan
 
         private void Form4_Load(object sender, EventArgs e)
         {
-            // Password akan tampil sebagai *****
+            // Password akan tampil sebagai bintang-bintang (*****)
             txtPassword.UseSystemPasswordChar = true;
         }
 
@@ -27,7 +28,7 @@ namespace SistemPendataanHewan
         {
             try
             {
-                // Validasi Input
+                // 1. Validasi Input Kosong
                 if (string.IsNullOrWhiteSpace(txtUsername.Text))
                 {
                     MessageBox.Show("Username harus diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -47,21 +48,24 @@ namespace SistemPendataanHewan
                     conn.Open();
                 }
 
-                // MENGAMBIL DATA ROLE DARI DATABASE
+                // =====================================================================
+                // 2. SOLUSI ANTI SQL INJECTION: Menggunakan Parameterized Query
+                // =====================================================================
                 string query = @"SELECT IDPengguna, NamaPengguna, RoleUser 
-                 FROM Pengguna 
-                 WHERE Username = @Username AND PasswordHash = @PasswordHash";
+                                 FROM Pengguna 
+                                 WHERE Username = @Username AND PasswordHash = @PasswordHash";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
+                    // Nilai dikirim via parameter, sehingga karakter injeksi tidak akan tereksekusi
                     cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
                     cmd.Parameters.AddWithValue("@PasswordHash", txtPassword.Text);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read()) // Jika username & password cocok
+                        if (reader.Read()) // Jika username & password ditemukan di database
                         {
-                            // Simpan data login ke Class SesiPengguna
+                            // Simpan data login ke Class SesiPengguna (Pastikan class ini sudah kamu buat)
                             SesiPengguna.IDPengguna = Convert.ToInt32(reader["IDPengguna"]);
                             SesiPengguna.NamaPengguna = reader["NamaPengguna"].ToString();
                             SesiPengguna.RoleUser = reader["RoleUser"].ToString();
@@ -69,9 +73,11 @@ namespace SistemPendataanHewan
                             MessageBox.Show("Login berhasil!\nSelamat datang, " + SesiPengguna.NamaPengguna + " (" + SesiPengguna.RoleUser + ")",
                                             "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            // Buka Menu Utama
+                            // Buka Menu Utama (Form8)
                             Form8 frm = new Form8();
                             frm.Show();
+
+                            // Sembunyikan form login
                             this.Hide();
                         }
                         else
@@ -85,12 +91,12 @@ namespace SistemPendataanHewan
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message, "Error",
+                MessageBox.Show("Terjadi kesalahan saat login: " + ex.Message, "Error Database",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                // Tutup koneksi
+                // Pastikan koneksi selalu tertutup apa pun yang terjadi
                 if (conn.State == ConnectionState.Open)
                 {
                     conn.Close();
@@ -100,8 +106,7 @@ namespace SistemPendataanHewan
 
         private void btnBatal_Click(object sender, EventArgs e)
         {
-            // Konfirmasi keluar aplikasi
-            DialogResult result = MessageBox.Show("Apakah Anda yakin ingin keluar?", "Konfirmasi",
+            DialogResult result = MessageBox.Show("Apakah Anda yakin ingin keluar dari aplikasi?", "Konfirmasi Keluar",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
@@ -110,16 +115,15 @@ namespace SistemPendataanHewan
             }
         }
 
- 
-private void txtUsername_TextChanged(object sender, EventArgs e)
+        private void txtUsername_TextChanged(object sender, EventArgs e)
         {
-            // Kosongkan password jika username berubah (opsional)
-            // txtPassword.Clear();
+            // Opsional: Memaksa user mengetik ulang password jika username diganti di tengah jalan
+            txtPassword.Clear();
         }
 
         private void txtPassword_TextChanged(object sender, EventArgs e)
         {
-            // Event ini bisa dibiarkan kosong
+            // Dibiarkan kosong sesuai dengan desain
         }
     }
 }
