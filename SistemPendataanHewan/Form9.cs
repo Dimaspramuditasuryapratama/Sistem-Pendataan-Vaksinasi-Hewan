@@ -97,5 +97,37 @@ namespace SistemPendataanHewan
             txtKeterangan.DataBindings.Add("Text", vaksinasiBindingSource, "Keterangan");
         }
 
+        private void LoadData()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_GetVaksinasi", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            dtVaksinasi = new DataTable();
+                            da.Fill(dtVaksinasi);
+
+                            vaksinasiBindingSource.DataSource = dtVaksinasi;
+                            dataGridView1.DataSource = vaksinasiBindingSource;
+
+                            bindingNavigator1.BindingSource = vaksinasiBindingSource;
+
+                            BindControls();
+                        }
+                    }
+                }
+                HitungTotal();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal load data: " + ex.Message);
+            }
+        }
+
     }
 }
