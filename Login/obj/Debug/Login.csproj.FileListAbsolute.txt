@@ -1,0 +1,10 @@
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\obj\Debug\Login.csproj.AssemblyReference.cache
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\obj\Debug\SistemPendataanHewan.Form1.resources
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\obj\Debug\Login.Properties.Resources.resources
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\obj\Debug\Login.csproj.GenerateResource.cache
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\obj\Debug\Login.csproj.CoreCompileInputs.cache
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\bin\Debug\Login.exe.config
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\bin\Debug\Login.exe
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\bin\Debug\Login.pdb
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\obj\Debug\Login.exe
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Login\obj\Debug\Login.pdb
