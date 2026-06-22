@@ -1,0 +1,10 @@
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\obj\Debug\Vaksinasi.csproj.AssemblyReference.cache
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\obj\Debug\SistemPendataanHewan.FormVaksinasi.resources
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\obj\Debug\Vaksinasi.Properties.Resources.resources
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\obj\Debug\Vaksinasi.csproj.GenerateResource.cache
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\obj\Debug\Vaksinasi.csproj.CoreCompileInputs.cache
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\bin\Debug\Vaksinasi.exe.config
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\bin\Debug\Vaksinasi.exe
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\bin\Debug\Vaksinasi.pdb
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\obj\Debug\Vaksinasi.exe
+D:\Kuliah\Semester 4\PABD\SistemPendataanHewan\SistemPendataanHewan\Vaksinasi\obj\Debug\Vaksinasi.pdb
