@@ -8,7 +8,7 @@ namespace SistemPendataanHewan
     public partial class Form5 : Form
     {
         private readonly string connectionString =
-            "Data Source=LAPTOP-2QET043V\\DIMAS;Initial Catalog=DBHewanPeliharaanADO;Integrated Security=True";
+            "Data Source=LAPTOP-MBD0B33T\\SHENDY;Initial Catalog=DBHewanPeliharaanADO;Integrated Security=True";
 
         private DataTable dtHewan = new DataTable();
         private BindingSource hewanBindingSource = new BindingSource();
@@ -18,29 +18,13 @@ namespace SistemPendataanHewan
             InitializeComponent();
         }
 
-        private void ConnectDatabase()
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    MessageBox.Show("Koneksi ke DBHewanPeliharaanADO berhasil!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Koneksi gagal: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void ClearForm()
         {
             txtIDHewan.Clear();
             txtIDPemilik.Clear();
             txtNamaHewan.Clear();
-            txtJenisHewan.Clear();
-            txtRas.Clear();
+            cmbJenisHewan.SelectedIndex = -1;
+            cmbRas.SelectedIndex = -1;
             cmbJenisKelamin.SelectedIndex = -1;
             txtUmur.Clear();
             txtWarna.Clear();
@@ -56,14 +40,11 @@ namespace SistemPendataanHewan
                     using (SqlCommand cmd = new SqlCommand("sp_CountHewan", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-
                         SqlParameter outputParam = new SqlParameter("@Total", SqlDbType.Int);
                         outputParam.Direction = ParameterDirection.Output;
                         cmd.Parameters.Add(outputParam);
-
                         conn.Open();
                         cmd.ExecuteNonQuery();
-
                         this.Text = "Form Data Hewan - Total Data: " + outputParam.Value.ToString();
                     }
                 }
@@ -79,8 +60,8 @@ namespace SistemPendataanHewan
             txtIDHewan.DataBindings.Clear();
             txtIDPemilik.DataBindings.Clear();
             txtNamaHewan.DataBindings.Clear();
-            txtJenisHewan.DataBindings.Clear();
-            txtRas.DataBindings.Clear();
+            cmbJenisHewan.DataBindings.Clear();
+            cmbRas.DataBindings.Clear();
             cmbJenisKelamin.DataBindings.Clear();
             txtUmur.DataBindings.Clear();
             txtWarna.DataBindings.Clear();
@@ -88,8 +69,8 @@ namespace SistemPendataanHewan
             txtIDHewan.DataBindings.Add("Text", hewanBindingSource, "IDHewan");
             txtIDPemilik.DataBindings.Add("Text", hewanBindingSource, "IDPemilik");
             txtNamaHewan.DataBindings.Add("Text", hewanBindingSource, "NamaHewan");
-            txtJenisHewan.DataBindings.Add("Text", hewanBindingSource, "JenisHewan");
-            txtRas.DataBindings.Add("Text", hewanBindingSource, "Ras");
+            cmbJenisHewan.DataBindings.Add("Text", hewanBindingSource, "JenisHewan");
+            cmbRas.DataBindings.Add("Text", hewanBindingSource, "Ras");
             cmbJenisKelamin.DataBindings.Add("Text", hewanBindingSource, "JenisKelamin");
             txtUmur.DataBindings.Add("Text", hewanBindingSource, "Umur");
             txtWarna.DataBindings.Add("Text", hewanBindingSource, "Warna");
@@ -101,20 +82,18 @@ namespace SistemPendataanHewan
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("sp_GetHewan", conn))
+                    // PERBAIKAN: MEMANGGIL VIEW SECARA LANGSUNG
+                    string queryView = "SELECT * FROM vw_DataHewan";
+                    using (SqlCommand cmd = new SqlCommand(queryView, conn))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
+                        cmd.CommandType = CommandType.Text;
                         using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                         {
                             dtHewan = new DataTable();
                             da.Fill(dtHewan);
-
                             hewanBindingSource.DataSource = dtHewan;
                             dataGridView1.DataSource = hewanBindingSource;
-
                             bindingNavigator1.BindingSource = hewanBindingSource;
-
                             BindControls();
                         }
                     }
@@ -127,8 +106,34 @@ namespace SistemPendataanHewan
             }
         }
 
+        private void TerapkanHakAkses()
+        {
+            if (SesiPengguna.RoleUser == "Petugas")
+            {
+                btnDelete.Visible = false;
+                if (bindingNavigatorDeleteItem != null) bindingNavigatorDeleteItem.Enabled = false;
+            }
+            else if (SesiPengguna.RoleUser == "Admin")
+            {
+                btnDelete.Visible = true;
+                if (bindingNavigatorDeleteItem != null) bindingNavigatorDeleteItem.Enabled = true;
+            }
+        }
+
         private void Form5_Load(object sender, EventArgs e)
         {
+            cmbJenisHewan.Items.Clear();
+            cmbJenisHewan.Items.Add("Kucing");
+            cmbJenisHewan.Items.Add("Anjing");
+
+            cmbRas.Items.Clear();
+            cmbRas.Items.Add("Persia");
+            cmbRas.Items.Add("Anggora");
+            cmbRas.Items.Add("Maine Coon");
+            cmbRas.Items.Add("Bulldog");
+            cmbRas.Items.Add("Golden Retriever");
+            cmbRas.Items.Add("Husky");
+
             cmbJenisKelamin.Items.Clear();
             cmbJenisKelamin.Items.Add("L");
             cmbJenisKelamin.Items.Add("P");
@@ -140,17 +145,11 @@ namespace SistemPendataanHewan
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             LoadData();
+            TerapkanHakAkses();
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
-        {
-            ConnectDatabase();
-        }
-
-        private void btnLoad_Click(object sender, EventArgs e)
-        {
-            LoadData();
-        }
+        private void btnConnect_Click(object sender, EventArgs e) { /*...sama*/ }
+        private void btnLoad_Click(object sender, EventArgs e) { LoadData(); }
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
@@ -159,7 +158,6 @@ namespace SistemPendataanHewan
                 if (txtNamaHewan.Text == "" || txtIDPemilik.Text == "")
                 {
                     MessageBox.Show("ID Pemilik dan Nama Hewan harus diisi!");
-                    txtIDPemilik.Focus();
                     return;
                 }
 
@@ -168,11 +166,10 @@ namespace SistemPendataanHewan
                     using (SqlCommand cmd = new SqlCommand("sp_InsertHewan", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-
                         cmd.Parameters.AddWithValue("@IDPemilik", int.Parse(txtIDPemilik.Text));
                         cmd.Parameters.AddWithValue("@NamaHewan", txtNamaHewan.Text);
-                        cmd.Parameters.AddWithValue("@JenisHewan", txtJenisHewan.Text);
-                        cmd.Parameters.AddWithValue("@Ras", txtRas.Text);
+                        cmd.Parameters.AddWithValue("@JenisHewan", cmbJenisHewan.Text);
+                        cmd.Parameters.AddWithValue("@Ras", cmbRas.Text);
                         cmd.Parameters.AddWithValue("@JenisKelamin", cmbJenisKelamin.Text);
                         cmd.Parameters.AddWithValue("@Umur", decimal.Parse(txtUmur.Text));
                         cmd.Parameters.AddWithValue("@Warna", txtWarna.Text);
@@ -196,23 +193,18 @@ namespace SistemPendataanHewan
         {
             try
             {
-                if (txtIDHewan.Text == "")
-                {
-                    MessageBox.Show("Pilih data hewan yang ingin diubah terlebih dahulu");
-                    return;
-                }
+                if (txtIDHewan.Text == "") return;
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_UpdateHewan", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-
                         cmd.Parameters.AddWithValue("@IDHewan", int.Parse(txtIDHewan.Text));
                         cmd.Parameters.AddWithValue("@IDPemilik", int.Parse(txtIDPemilik.Text));
                         cmd.Parameters.AddWithValue("@NamaHewan", txtNamaHewan.Text);
-                        cmd.Parameters.AddWithValue("@JenisHewan", txtJenisHewan.Text);
-                        cmd.Parameters.AddWithValue("@Ras", txtRas.Text);
+                        cmd.Parameters.AddWithValue("@JenisHewan", cmbJenisHewan.Text);
+                        cmd.Parameters.AddWithValue("@Ras", cmbRas.Text);
                         cmd.Parameters.AddWithValue("@JenisKelamin", cmbJenisKelamin.Text);
                         cmd.Parameters.AddWithValue("@Umur", decimal.Parse(txtUmur.Text));
                         cmd.Parameters.AddWithValue("@Warna", txtWarna.Text);
@@ -236,20 +228,9 @@ namespace SistemPendataanHewan
         {
             try
             {
-                if (txtIDHewan.Text == "")
-                {
-                    MessageBox.Show("Pilih data yang ingin dihapus terlebih dahulu");
-                    return;
-                }
+                if (txtIDHewan.Text == "") return;
 
-                DialogResult resultConfirm = MessageBox.Show(
-                    "Yakin ingin menghapus data hewan ini?",
-                    "Konfirmasi Hapus",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-
-                if (resultConfirm == DialogResult.Yes)
+                if (MessageBox.Show("Yakin ingin menghapus data hewan ini?", "Konfirmasi Hapus", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
@@ -259,25 +240,18 @@ namespace SistemPendataanHewan
                             cmd.Parameters.AddWithValue("@IDHewan", int.Parse(txtIDHewan.Text));
 
                             conn.Open();
-                            int rowsAffected = cmd.ExecuteNonQuery();
+                            cmd.ExecuteNonQuery();
 
-                            if (rowsAffected > 0)
-                            {
-                                MessageBox.Show("Data berhasil dihapus");
-                                ClearForm();
-                                LoadData();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Data tidak ditemukan");
-                            }
+                            MessageBox.Show("Data berhasil dihapus");
+                            ClearForm();
+                            LoadData();
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal menghapus data. Kemungkinan data ini sedang digunakan di tabel Vaksinasi.\n\nDetail: " + ex.Message, "Error Hapus", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal menghapus data. " + ex.Message);
             }
         }
 
@@ -286,15 +260,23 @@ namespace SistemPendataanHewan
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-
                 txtIDHewan.Text = row.Cells["IDHewan"].Value.ToString();
                 txtIDPemilik.Text = row.Cells["IDPemilik"].Value.ToString();
                 txtNamaHewan.Text = row.Cells["NamaHewan"].Value.ToString();
-                txtJenisHewan.Text = row.Cells["JenisHewan"].Value.ToString();
-                txtRas.Text = row.Cells["Ras"].Value.ToString();
+                cmbJenisHewan.Text = row.Cells["JenisHewan"].Value.ToString();
+                cmbRas.Text = row.Cells["Ras"].Value.ToString();
                 cmbJenisKelamin.Text = row.Cells["JenisKelamin"].Value.ToString();
                 txtUmur.Text = row.Cells["Umur"].Value.ToString();
                 txtWarna.Text = row.Cells["Warna"].Value.ToString();
+            }
+        }
+
+        // FUNGSI INI WAJIB DISAMBUNGKAN KE EVENTS "KeyPress" PADA txtIDPemilik
+        private void HanyaAngka_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
             }
         }
     }

@@ -6,6 +6,7 @@ namespace SistemPendataanHewan
 {
     public partial class Form8 : Form
     {
+        // Pastikan Data Source sesuai dengan nama server SQL Server kamu
         private readonly string connectionString =
             "Data Source=LAPTOP-2QET043V\\DIMAS;Initial Catalog=DBHewanPeliharaanADO;Integrated Security=True";
 
@@ -16,10 +17,14 @@ namespace SistemPendataanHewan
 
         private void Form8_Load(object sender, EventArgs e)
         {
-            // 1. Batasan Hak Akses Petugas
+            // 1. Batasan Hak Akses: Petugas tidak boleh melihat Menu Laporan
             if (SesiPengguna.RoleUser == "Petugas")
             {
                 btnLaporan.Visible = false;
+            }
+            else if (SesiPengguna.RoleUser == "Admin")
+            {
+                btnLaporan.Visible = true;
             }
 
             // 2. Jalankan Fungsi ExecuteScalar untuk Menghitung Total Data
@@ -27,6 +32,7 @@ namespace SistemPendataanHewan
         }
 
         // IMPLEMENTASI EXECUTESCALAR (Syarat Komponen Penilaian 10%)
+        // IMPLEMENTASI EXECUTESCALAR
         private void HitungTotalHewan()
         {
             try
@@ -35,6 +41,7 @@ namespace SistemPendataanHewan
                 {
                     conn.Open();
 
+                    // PERBAIKAN DI SINI: Ubah 'Hewan' menjadi 'HewanPeliharaan'
                     string query = "SELECT COUNT(*) FROM HewanPeliharaan";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -47,10 +54,9 @@ namespace SistemPendataanHewan
             catch (Exception ex)
             {
                 lblTotalHewan.Text = "Total Hewan: Gagal Memuat";
-                MessageBox.Show("Penyebab gagal memuat: " + ex.Message, "Informasi Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Penyebab gagal memuat total hewan: " + ex.Message, "Informasi Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void btnPemilik_Click(object sender, EventArgs e)
         {
             Form1 frm = new Form1();
@@ -77,10 +83,27 @@ namespace SistemPendataanHewan
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Anda telah keluar dari sistem.", "Logout", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Form4 login = new Form4();
-            login.Show();
-            this.Close();
+            DialogResult resultConfirm = MessageBox.Show(
+                "Yakin ingin keluar dari sistem?",
+                "Konfirmasi Logout",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (resultConfirm == DialogResult.Yes)
+            {
+                // Membersihkan Sesi
+                SesiPengguna.IDPengguna = 0;
+                SesiPengguna.NamaPengguna = "";
+                SesiPengguna.RoleUser = "";
+
+                MessageBox.Show("Anda telah berhasil keluar dari sistem.", "Logout Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Kembali ke Form Login (Form4)
+                Form4 login = new Form4();
+                login.Show();
+                this.Close();
+            }
         }
     }
 }

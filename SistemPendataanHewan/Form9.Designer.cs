@@ -1,4 +1,5 @@
-﻿namespace SistemPendataanHewan
+﻿
+namespace SistemPendataanHewan
 {
     partial class Form9
     {
@@ -26,8 +27,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.txtIDVaksinasi = new System.Windows.Forms.TextBox();
-            this.txtKeterangan = new System.Windows.Forms.TextBox();
-            this.txtJenisVaksin = new System.Windows.Forms.TextBox();
             this.txtIDHewan = new System.Windows.Forms.TextBox();
             this.dtpTanggalVaksin = new System.Windows.Forms.DateTimePicker();
             this.dtpTanggalBerikutnya = new System.Windows.Forms.DateTimePicker();
@@ -39,9 +38,7 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
-            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
-            this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -50,6 +47,10 @@
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
+            this.cmbKeterangan = new System.Windows.Forms.ComboBox();
+            this.cmbJenisVaksin = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
@@ -141,22 +142,6 @@
             this.txtIDVaksinasi.Size = new System.Drawing.Size(280, 29);
             this.txtIDVaksinasi.TabIndex = 7;
             // 
-            // txtKeterangan
-            // 
-            this.txtKeterangan.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtKeterangan.Location = new System.Drawing.Point(170, 286);
-            this.txtKeterangan.Name = "txtKeterangan";
-            this.txtKeterangan.Size = new System.Drawing.Size(280, 29);
-            this.txtKeterangan.TabIndex = 8;
-            // 
-            // txtJenisVaksin
-            // 
-            this.txtJenisVaksin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtJenisVaksin.Location = new System.Drawing.Point(170, 126);
-            this.txtJenisVaksin.Name = "txtJenisVaksin";
-            this.txtJenisVaksin.Size = new System.Drawing.Size(280, 29);
-            this.txtJenisVaksin.TabIndex = 9;
-            // 
             // txtIDHewan
             // 
             this.txtIDHewan.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -164,6 +149,7 @@
             this.txtIDHewan.Name = "txtIDHewan";
             this.txtIDHewan.Size = new System.Drawing.Size(280, 29);
             this.txtIDHewan.TabIndex = 10;
+            this.txtIDHewan.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HanyaAngka_KeyPress);
             // 
             // dtpTanggalVaksin
             // 
@@ -291,25 +277,11 @@
             this.bindingNavigator1.TabIndex = 22;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
-            // bindingNavigatorAddNewItem
-            // 
-            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 24);
-            this.bindingNavigatorAddNewItem.Text = "+";
-            // 
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
             this.bindingNavigatorCountItem.Size = new System.Drawing.Size(45, 24);
             this.bindingNavigatorCountItem.Text = "of {0}";
-            // 
-            // bindingNavigatorDeleteItem
-            // 
-            this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 24);
-            this.bindingNavigatorDeleteItem.Text = "-";
             // 
             // bindingNavigatorMoveFirstItem
             // 
@@ -361,12 +333,46 @@
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
             this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
+            // bindingNavigatorAddNewItem
+            // 
+            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorAddNewItem.Text = "+";
+            // 
+            // bindingNavigatorDeleteItem
+            // 
+            this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorDeleteItem.Text = "-";
+            // 
+            // cmbKeterangan
+            // 
+            this.cmbKeterangan.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbKeterangan.FormattingEnabled = true;
+            this.cmbKeterangan.Location = new System.Drawing.Point(170, 288);
+            this.cmbKeterangan.Name = "cmbKeterangan";
+            this.cmbKeterangan.Size = new System.Drawing.Size(280, 29);
+            this.cmbKeterangan.TabIndex = 23;
+            // 
+            // cmbJenisVaksin
+            // 
+            this.cmbJenisVaksin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbJenisVaksin.FormattingEnabled = true;
+            this.cmbJenisVaksin.Location = new System.Drawing.Point(170, 125);
+            this.cmbJenisVaksin.Name = "cmbJenisVaksin";
+            this.cmbJenisVaksin.Size = new System.Drawing.Size(280, 29);
+            this.cmbJenisVaksin.TabIndex = 24;
+            // 
             // Form9
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.AliceBlue;
             this.ClientSize = new System.Drawing.Size(760, 560);
+            this.Controls.Add(this.cmbJenisVaksin);
+            this.Controls.Add(this.cmbKeterangan);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnDelete);
@@ -378,8 +384,6 @@
             this.Controls.Add(this.dtpTanggalBerikutnya);
             this.Controls.Add(this.dtpTanggalVaksin);
             this.Controls.Add(this.txtIDHewan);
-            this.Controls.Add(this.txtJenisVaksin);
-            this.Controls.Add(this.txtKeterangan);
             this.Controls.Add(this.txtIDVaksinasi);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -412,8 +416,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtIDVaksinasi;
-        private System.Windows.Forms.TextBox txtKeterangan;
-        private System.Windows.Forms.TextBox txtJenisVaksin;
         private System.Windows.Forms.TextBox txtIDHewan;
         private System.Windows.Forms.DateTimePicker dtpTanggalVaksin;
         private System.Windows.Forms.DateTimePicker dtpTanggalBerikutnya;
@@ -436,6 +438,7 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveNextItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
-
+        private System.Windows.Forms.ComboBox cmbKeterangan;
+        private System.Windows.Forms.ComboBox cmbJenisVaksin;
     }
 }

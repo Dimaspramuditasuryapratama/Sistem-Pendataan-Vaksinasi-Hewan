@@ -27,11 +27,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtIDHewan = new System.Windows.Forms.TextBox();
-            this.txtIDPemilik = new System.Windows.Forms.TextBox();
             this.txtNamaHewan = new System.Windows.Forms.TextBox();
-            this.txtJenisHewan = new System.Windows.Forms.TextBox();
             this.txtUmur = new System.Windows.Forms.TextBox();
-            this.txtRas = new System.Windows.Forms.TextBox();
             this.txtWarna = new System.Windows.Forms.TextBox();
             this.cmbJenisKelamin = new System.Windows.Forms.ComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
@@ -41,9 +38,7 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
-            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
-            this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -52,6 +47,11 @@
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
+            this.txtIDPemilik = new System.Windows.Forms.TextBox();
+            this.cmbJenisHewan = new System.Windows.Forms.ComboBox();
+            this.cmbRas = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
@@ -154,14 +154,6 @@
             this.txtIDHewan.Size = new System.Drawing.Size(280, 29);
             this.txtIDHewan.TabIndex = 8;
             // 
-            // txtIDPemilik
-            // 
-            this.txtIDPemilik.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtIDPemilik.Location = new System.Drawing.Point(170, 86);
-            this.txtIDPemilik.Name = "txtIDPemilik";
-            this.txtIDPemilik.Size = new System.Drawing.Size(280, 29);
-            this.txtIDPemilik.TabIndex = 9;
-            // 
             // txtNamaHewan
             // 
             this.txtNamaHewan.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -170,14 +162,6 @@
             this.txtNamaHewan.Size = new System.Drawing.Size(280, 29);
             this.txtNamaHewan.TabIndex = 10;
             // 
-            // txtJenisHewan
-            // 
-            this.txtJenisHewan.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtJenisHewan.Location = new System.Drawing.Point(170, 166);
-            this.txtJenisHewan.Name = "txtJenisHewan";
-            this.txtJenisHewan.Size = new System.Drawing.Size(280, 29);
-            this.txtJenisHewan.TabIndex = 11;
-            // 
             // txtUmur
             // 
             this.txtUmur.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -185,14 +169,6 @@
             this.txtUmur.Name = "txtUmur";
             this.txtUmur.Size = new System.Drawing.Size(280, 29);
             this.txtUmur.TabIndex = 12;
-            // 
-            // txtRas
-            // 
-            this.txtRas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRas.Location = new System.Drawing.Point(170, 206);
-            this.txtRas.Name = "txtRas";
-            this.txtRas.Size = new System.Drawing.Size(280, 29);
-            this.txtRas.TabIndex = 13;
             // 
             // txtWarna
             // 
@@ -310,79 +286,106 @@
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(760, 27);
+            this.bindingNavigator1.Size = new System.Drawing.Size(760, 31);
             this.bindingNavigator1.TabIndex = 25;
             this.bindingNavigator1.Text = "bindingNavigator1";
-            // 
-            // bindingNavigatorAddNewItem
-            // 
-            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 24);
-            this.bindingNavigatorAddNewItem.Text = "+";
             // 
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(45, 24);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(45, 28);
             this.bindingNavigatorCountItem.Text = "of {0}";
-            // 
-            // bindingNavigatorDeleteItem
-            // 
-            this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 24);
-            this.bindingNavigatorDeleteItem.Text = "-";
             // 
             // bindingNavigatorMoveFirstItem
             // 
             this.bindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveFirstItem.Text = "|<";
             // 
             // bindingNavigatorMovePreviousItem
             // 
             this.bindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
-            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMovePreviousItem.Text = "<";
             // 
             // bindingNavigatorSeparator
             // 
             this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 31);
             // 
             // bindingNavigatorPositionItem
             // 
             this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
-            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 27);
+            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 31);
             this.bindingNavigatorPositionItem.Text = "0";
             // 
             // bindingNavigatorSeparator1
             // 
             this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator1";
-            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // bindingNavigatorMoveNextItem
             // 
             this.bindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
-            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveNextItem.Text = ">";
             // 
             // bindingNavigatorMoveLastItem
             // 
             this.bindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
-            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveLastItem.Text = ">|";
             // 
             // bindingNavigatorSeparator2
             // 
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
-            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 31);
+            // 
+            // bindingNavigatorAddNewItem
+            // 
+            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorAddNewItem.Text = "+";
+            // 
+            // bindingNavigatorDeleteItem
+            // 
+            this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorDeleteItem.Text = "-";
+            // 
+            // txtIDPemilik
+            // 
+            this.txtIDPemilik.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtIDPemilik.Location = new System.Drawing.Point(170, 86);
+            this.txtIDPemilik.Name = "txtIDPemilik";
+            this.txtIDPemilik.Size = new System.Drawing.Size(280, 29);
+            this.txtIDPemilik.TabIndex = 9;
+            this.txtIDPemilik.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HanyaAngka_KeyPress);
+            // 
+            // cmbJenisHewan
+            // 
+            this.cmbJenisHewan.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbJenisHewan.FormattingEnabled = true;
+            this.cmbJenisHewan.Location = new System.Drawing.Point(170, 166);
+            this.cmbJenisHewan.Name = "cmbJenisHewan";
+            this.cmbJenisHewan.Size = new System.Drawing.Size(280, 29);
+            this.cmbJenisHewan.TabIndex = 26;
+            // 
+            // cmbRas
+            // 
+            this.cmbRas.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRas.FormattingEnabled = true;
+            this.cmbRas.Location = new System.Drawing.Point(170, 205);
+            this.cmbRas.Name = "cmbRas";
+            this.cmbRas.Size = new System.Drawing.Size(280, 29);
+            this.cmbRas.TabIndex = 27;
             // 
             // Form5
             // 
@@ -390,6 +393,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.AliceBlue;
             this.ClientSize = new System.Drawing.Size(760, 590);
+            this.Controls.Add(this.cmbRas);
+            this.Controls.Add(this.cmbJenisHewan);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnDelete);
@@ -399,9 +404,7 @@
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.cmbJenisKelamin);
             this.Controls.Add(this.txtWarna);
-            this.Controls.Add(this.txtRas);
             this.Controls.Add(this.txtUmur);
-            this.Controls.Add(this.txtJenisHewan);
             this.Controls.Add(this.txtNamaHewan);
             this.Controls.Add(this.txtIDPemilik);
             this.Controls.Add(this.txtIDHewan);
@@ -438,11 +441,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtIDHewan;
-        private System.Windows.Forms.TextBox txtIDPemilik;
         private System.Windows.Forms.TextBox txtNamaHewan;
-        private System.Windows.Forms.TextBox txtJenisHewan;
         private System.Windows.Forms.TextBox txtUmur;
-        private System.Windows.Forms.TextBox txtRas;
         private System.Windows.Forms.TextBox txtWarna;
         private System.Windows.Forms.ComboBox cmbJenisKelamin;
         private System.Windows.Forms.Button btnConnect;
@@ -463,6 +463,8 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveNextItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
-
+        private System.Windows.Forms.TextBox txtIDPemilik;
+        private System.Windows.Forms.ComboBox cmbJenisHewan;
+        private System.Windows.Forms.ComboBox cmbRas;
     }
 }

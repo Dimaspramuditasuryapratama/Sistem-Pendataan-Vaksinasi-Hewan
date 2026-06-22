@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -6,8 +8,9 @@ namespace SistemPendataanHewan
 {
     public partial class Form10 : Form
     {
+        // Pastikan nama server SQL Server kamu sesuai
         private readonly string connectionString =
-            "Data Source=LAPTOP-2QET043V\\DIMAS;Initial Catalog=DBHewanPeliharaanADO;Integrated Security=True";
+            "Data Source=LAPTOP-MBD0B33T\\SHENDY;Initial Catalog=DBHewanPeliharaanADO;Integrated Security=True";
 
         public Form10()
         {
@@ -16,6 +19,7 @@ namespace SistemPendataanHewan
 
         private void Form10_Load(object sender, EventArgs e)
         {
+            // Mengatur tampilan tabel agar rapi dan tidak bisa diedit secara manual
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = false;
             dataGridView1.ReadOnly = true;
@@ -23,146 +27,67 @@ namespace SistemPendataanHewan
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
-        private void btnLaporanPemilik_Click(object sender, EventArgs e)
+        // --- FUNGSI UTAMA UNTUK MEMANGGIL VIEW ---
+        // Fungsi ini dibuat agar kita tidak perlu menulis ulang kodingan koneksi berkali-kali
+        private void TampilkanLaporan(string queryView, string namaLaporan)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
-
-                    dataGridView1.Rows.Clear();
-                    dataGridView1.Columns.Clear();
-
-                    dataGridView1.Columns.Add("IDPemilik", "ID Pemilik");
-                    dataGridView1.Columns.Add("NamaPemilik", "Nama Pemilik");
-                    dataGridView1.Columns.Add("Alamat", "Alamat");
-                    dataGridView1.Columns.Add("NoHP", "No. HP");
-                    dataGridView1.Columns.Add("RTRW", "RT/RW");
-
-                    string query = "SELECT * FROM Pemilik";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand(queryView, conn))
                     {
-                        while (reader.Read())
+                        cmd.CommandType = CommandType.Text; // Menggunakan Text karena langsung memanggil View
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                         {
-                            dataGridView1.Rows.Add(
-                                reader["IDPemilik"].ToString(),
-                                reader["NamaPemilik"].ToString(),
-                                reader["Alamat"].ToString(),
-                                reader["NoHP"].ToString(),
-                                reader["RTRW"].ToString()
-                            );
+                            DataTable dtLaporan = new DataTable();
+                            da.Fill(dtLaporan);
+
+                            // Menampilkan data ke tabel
+                            dataGridView1.DataSource = dtLaporan;
+
+                            // Opsional: Mengubah judul form agar menampilkan jumlah data
+                            this.Text = $"Form Laporan - {namaLaporan} (Total Data: {dtLaporan.Rows.Count})";
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal menampilkan laporan pemilik: " + ex.Message);
+                MessageBox.Show("Gagal memuat laporan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // --- EVENT KLIK TOMBOL ---
+
+        private void btnLaporanPemilik_Click(object sender, EventArgs e)
+        {
+            // Memanggil View Pemilik
+            TampilkanLaporan("SELECT * FROM vw_DataPemilik", "Data Pemilik");
         }
 
         private void btnLaporanHewan_Click(object sender, EventArgs e)
         {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    dataGridView1.Rows.Clear();
-                    dataGridView1.Columns.Clear();
-
-                    dataGridView1.Columns.Add("IDHewan", "ID Hewan");
-                    dataGridView1.Columns.Add("IDPemilik", "ID Pemilik");
-                    dataGridView1.Columns.Add("NamaHewan", "Nama Hewan");
-                    dataGridView1.Columns.Add("JenisHewan", "Jenis Hewan");
-                    dataGridView1.Columns.Add("Ras", "Ras");
-                    dataGridView1.Columns.Add("JenisKelamin", "Jenis Kelamin");
-                    dataGridView1.Columns.Add("Umur", "Umur");
-                    dataGridView1.Columns.Add("Warna", "Warna");
-
-                    string query = "SELECT * FROM HewanPeliharaan";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            dataGridView1.Rows.Add(
-                                reader["IDHewan"].ToString(),
-                                reader["IDPemilik"].ToString(),
-                                reader["NamaHewan"].ToString(),
-                                reader["JenisHewan"].ToString(),
-                                reader["Ras"].ToString(),
-                                reader["JenisKelamin"].ToString(),
-                                reader["Umur"].ToString(),
-                                reader["Warna"].ToString()
-                            );
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menampilkan laporan hewan: " + ex.Message);
-            }
+            // Memanggil View Hewan
+            TampilkanLaporan("SELECT * FROM vw_DataHewan", "Data Hewan");
         }
 
         private void btnLaporanVaksinasi_Click(object sender, EventArgs e)
         {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    dataGridView1.Rows.Clear();
-                    dataGridView1.Columns.Clear();
-
-                    dataGridView1.Columns.Add("IDVaksinasi", "ID Vaksinasi");
-                    dataGridView1.Columns.Add("IDHewan", "ID Hewan");
-                    dataGridView1.Columns.Add("JenisVaksin", "Jenis Vaksin");
-                    dataGridView1.Columns.Add("TanggalVaksin", "Tanggal Vaksin");
-                    dataGridView1.Columns.Add("TanggalBerikutnya", "Tanggal Berikutnya");
-                    dataGridView1.Columns.Add("StatusVaksin", "Status Vaksin");
-                    dataGridView1.Columns.Add("Keterangan", "Keterangan");
-
-                    string query = "SELECT * FROM Vaksinasi";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            dataGridView1.Rows.Add(
-                                reader["IDVaksinasi"].ToString(),
-                                reader["IDHewan"].ToString(),
-                                reader["JenisVaksin"].ToString(),
-                                Convert.ToDateTime(reader["TanggalVaksin"]).ToString("yyyy-MM-dd"),
-                                Convert.ToDateTime(reader["TanggalBerikutnya"]).ToString("yyyy-MM-dd"),
-                                reader["StatusVaksin"].ToString(),
-                                reader["Keterangan"].ToString()
-                            );
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menampilkan laporan vaksinasi: " + ex.Message);
-            }
-        }
-
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
+            // Memanggil View Vaksinasi
+            TampilkanLaporan("SELECT * FROM vw_DataVaksinasi", "Data Vaksinasi");
         }
 
         private void btnTutup_Click(object sender, EventArgs e)
         {
+            // Menutup form laporan
             this.Close();
+        }
+
+        // Event ini terdaftar di desainermen, kita biarkan kosong karena ini hanya form untuk melihat data
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Tidak ada aksi yang diperlukan saat baris diklik di menu laporan
         }
     }
 }
